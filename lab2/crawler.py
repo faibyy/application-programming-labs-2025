@@ -14,17 +14,17 @@ def crawl_range(
     date_range: tuple[tuple[int, int, int], tuple[int, int, int]],
     max_num: int,
 ) -> None:
-    """Скачивает изображения для одного диапазона дат в указанную папку."""
+    """РЎРєР°С‡РёРІР°РµС‚ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РґР»СЏ РѕРґРЅРѕРіРѕ РґРёР°РїР°Р·РѕРЅР° РґР°С‚ РІ СѓРєР°Р·Р°РЅРЅСѓСЋ РїР°РїРєСѓ."""
     out_dir.mkdir(parents=True, exist_ok=True)
     crawler = GoogleImageCrawler(storage={"root_dir": str(out_dir)})
     crawler.session.headers.update({
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36'
-  }) #предотвращает ошибку TypeError: 'NoneType' object is not iterable в кравлере из-за блокировок
+  }) #РїСЂРµРґРѕС‚РІСЂР°С‰Р°РµС‚ РѕС€РёР±РєСѓ TypeError: 'NoneType' object is not iterable РІ РєСЂР°РІР»РµСЂРµ РёР·-Р·Р° Р±Р»РѕРєРёСЂРѕРІРѕРє
     crawler.crawl(keyword=keyword, filters={"date": date_range}, max_num=max_num)
 
 
 def create_pairs(root: Path) -> list[list[str]]:
-    """Создает пары путей к изображениям [abs, rel]."""
+    """РЎРѕР·РґР°РµС‚ РїР°СЂС‹ РїСѓС‚РµР№ Рє РёР·РѕР±СЂР°Р¶РµРЅРёСЏРј [abs, rel]."""
     pairs: list[list[str]] = []
     root = root.resolve()
     for fp in root.rglob("*"):
@@ -36,7 +36,7 @@ def create_pairs(root: Path) -> list[list[str]]:
 
 
 def write_csv(csv_path: Path, pairs: Iterable[Iterable[str]]) -> None:
-    """Записывает аннотацию в CSV-файл."""
+    """Р—Р°РїРёСЃС‹РІР°РµС‚ Р°РЅРЅРѕС‚Р°С†РёСЋ РІ CSV-С„Р°Р№Р»."""
     csv_path.parent.mkdir(parents=True, exist_ok=True)
     with csv_path.open("w", encoding="utf-8", newline="") as f:
         w = writer(f, delimiter=";")
@@ -45,11 +45,11 @@ def write_csv(csv_path: Path, pairs: Iterable[Iterable[str]]) -> None:
         for row in pairs:
             if not hasattr(row, "__iter__"):
                 raise TypeError(
-                    f"Ошибка: элемент {row!r} не является итерируемым (не список/кортеж)."
+                    f"РћС€РёР±РєР°: СЌР»РµРјРµРЅС‚ {row!r} РЅРµ СЏРІР»СЏРµС‚СЃСЏ РёС‚РµСЂРёСЂСѓРµРјС‹Рј (РЅРµ СЃРїРёСЃРѕРє/РєРѕСЂС‚РµР¶)."
                 )
             if len(row) < 2:
                 raise ValueError(
-                    f"Ошибка: строка {row!r} должна содержать минимум 2 значения [abs, rel]."
+                    f"РћС€РёР±РєР°: СЃС‚СЂРѕРєР° {row!r} РґРѕР»Р¶РЅР° СЃРѕРґРµСЂР¶Р°С‚СЊ РјРёРЅРёРјСѓРј 2 Р·РЅР°С‡РµРЅРёСЏ [abs, rel]."
                 )
             abs_path = str(row[0])
             rel_path = str(row[1])
@@ -57,7 +57,7 @@ def write_csv(csv_path: Path, pairs: Iterable[Iterable[str]]) -> None:
 
 
 class PathIterator:
-    """Итератор по изображениям из папки или CSV (возвращает [abs, rel])."""
+    """РС‚РµСЂР°С‚РѕСЂ РїРѕ РёР·РѕР±СЂР°Р¶РµРЅРёСЏРј РёР· РїР°РїРєРё РёР»Рё CSV (РІРѕР·РІСЂР°С‰Р°РµС‚ [abs, rel])."""
 
     def __init__(self, source: str, root: str | None = None) -> None:
         self.items: list[list[str]] = []
@@ -89,7 +89,7 @@ class PathIterator:
                     self.items.append([str(abs_path), str(rel_path)])
         else:
             raise ValueError(
-                f"source='{source}' должен быть .csv файлом или директорией"
+                f"source='{source}' РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ .csv С„Р°Р№Р»РѕРј РёР»Рё РґРёСЂРµРєС‚РѕСЂРёРµР№"
             )
         self._index = 0
 
@@ -106,7 +106,7 @@ class PathIterator:
 
 
 def download_images(args: argparse.Namespace) -> None:
-    """Скачивает файлы по диапазонам и формирует CSV-аннотацию."""
+    """РЎРєР°С‡РёРІР°РµС‚ С„Р°Р№Р»С‹ РїРѕ РґРёР°РїР°Р·РѕРЅР°Рј Рё С„РѕСЂРјРёСЂСѓРµС‚ CSV-Р°РЅРЅРѕС‚Р°С†РёСЋ."""
     out_root = Path(args.out_dir)
     for idx, dr in enumerate(args.ranges):
         subdir = out_root / f"range_{idx+1}"
