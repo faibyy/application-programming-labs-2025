@@ -24,17 +24,13 @@ def display_images(
     result_bgr: np.ndarray,
 ) -> None:
     """Вывод исходных изображений и результата."""
-    plt.imshow(bgr_to_rgb(img1_bgr))
-    plt.title("Image 1 (bottom)")
-    plt.axis("off")
-    plt.show()
-
-    plt.imshow(bgr_to_rgb(img2_bgr))
-    plt.title("Image 2 (top)")
-    plt.axis("off")
-    plt.show()
-
-    plt.imshow(bgr_to_rgb(result_bgr))
-    plt.title("Result (overlayed images)")
-    plt.axis("off")
+    images = [bgr_to_rgb(img1_bgr),bgr_to_rgb(img2_bgr),bgr_to_rgb(result_bgr)]
+    titles = ["Image 1 (bottom)","Image 2 (top)","Result (overlayed images)"]
+    fig, axs = plt.subplots(1, len(images), figsize=(12, 4))
+    for i in range (3):
+        ax = axs[i]
+        ax.imshow(images[i])
+        ax.set_title(titles[i])
+        ax.axis('off') 
+    plt.tight_layout()
     plt.show()
